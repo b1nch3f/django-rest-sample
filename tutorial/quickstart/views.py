@@ -19,8 +19,6 @@ preload_cache_init()
 class PredictAPI(APIView):
 
     def get(self, request, format=None):
-            
-        print(cache.get('id') is None)
 
         return Response(cache.get('id'))
 
@@ -31,6 +29,6 @@ class PublishAPI(APIView):
 
         # ---------------- send a message ------------------
 
-        pub.sendMessage('updateCache')
+        pub.sendMessage('updateCache', businessId=1000, bookId=100)
             
         return Response("{'status':'model published'}")
