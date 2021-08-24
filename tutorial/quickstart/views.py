@@ -2,53 +2,32 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.core.cache import cache
 from pubsub import pub
 
+from .Subscribers.subscribe import *
 
-cache = {}
 
 def preload_cache_init():
 
-    global cache
-
-    cache['id'] = 100
+    cache.set('id', 100, None)
 
 
 preload_cache_init()
 
 
-# ------------ create a listener ------------------
-
-def preload_cache_sub():
-
-    global cache
-
-    cache['id'] = 200
-
-
-
-# ------------ register listener ------------------
-
-pub.subscribe(preload_cache_sub, 'updateCache')
-
-
 class PredictAPI(APIView):
+
     def get(self, request, format=None):
-
-        global cache
-
-        #print(cache)
-        
-        # cache['id'] = 101
             
-        return Response(cache)
+        print(cache.get('id') is None)
+
+        return Response(cache.get('id'))
 
 
 class PublishAPI(APIView):
-    def get(self, request, format=None):
 
-        global cache
+    def get(self, request, format=None):
 
         # ---------------- send a message ------------------
 
